@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+
 
 public class PlayerMove : MonoBehaviour
 {                 
@@ -9,6 +11,7 @@ public class PlayerMove : MonoBehaviour
     Rigidbody2D rigid;
     SpriteRenderer spriteRenderer;
     Animator anim;
+
 
     // Start is called before the first frame update
     void Awake()
@@ -46,6 +49,8 @@ public class PlayerMove : MonoBehaviour
         {
             anim.SetBool("isWalking", true);
         }
+
+
     }
     void FixedUpdate()
     {
@@ -69,6 +74,14 @@ public class PlayerMove : MonoBehaviour
                 if (rayHit.distance <= 1.5f)
                     anim.SetBool("isJumping", false);
             }
+        }
+    }
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if(collision.gameObject.CompareTag("Finish"))
+        {
+            Debug.Log("?");
+            SceneManager.LoadScene("finish");
         }
     }
 }
