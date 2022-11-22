@@ -76,12 +76,35 @@ public class PlayerMove : MonoBehaviour
             }
         }
     }
-    private void OnCollisionEnter2D(Collision2D collision)
+    void OnCollisionEnter2D(Collision2D collision)
     {
         if(collision.gameObject.CompareTag("Finish"))
         {
             Debug.Log("?");
             SceneManager.LoadScene("finish");
         }
+        if (collision.gameObject.tag=="enemy")
+        {
+            OnDamaged(collision.transform.position); 
+        }
+    }
+    void OnDamaged(Vector2 targetPos)
+    {
+        gameObject.layer = 11;
+
+        spriteRenderer.color = new Color(1, 1, 1,0.4f);
+
+        int dirc = (transform.position.x - targetPos.x) > 0 ? 1 : -1;
+        rigid.AddForce(new Vector2(dirc, 1)*7, ForceMode2D.Impulse);
+
+
+        anim.SetTrigger("doDamaged");
+        Invoke("OffDamaged", 3);
+    }
+
+    void OffDamaged()
+    {
+        gameObject.layer = 10;
+        spriteRenderer.color = new Color(1, 1, 1, 1);
     }
 }
