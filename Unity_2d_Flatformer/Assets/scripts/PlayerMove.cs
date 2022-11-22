@@ -37,7 +37,7 @@ public class PlayerMove : MonoBehaviour
             //stop speed
             rigid.velocity = new Vector2(rigid.velocity.normalized.x*(0.5f), rigid.velocity.y);
         }
-        if (Input.GetButtonDown("Horizontal"))
+        if (Input.GetButton("Horizontal"))
         {
             spriteRenderer.flipX = Input.GetAxisRaw("Horizontal") == -1;
         }
