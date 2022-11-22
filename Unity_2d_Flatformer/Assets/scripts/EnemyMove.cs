@@ -28,7 +28,7 @@ public class EnemyMove : MonoBehaviour
         //Platform Check
         Vector2 frontVec = new Vector2(rigid.position.x+nextMove,rigid.position.y);
         Debug.DrawRay(frontVec, Vector3.down, new Color(0, 1, 0));
-        RaycastHit2D rayHit = Physics2D.Raycast(frontVec*0.1f, Vector3.down, 1, LayerMask.GetMask("Platform"));
+        RaycastHit2D rayHit = Physics2D.Raycast(frontVec, Vector3.down, 0.5f, LayerMask.GetMask("Platform"));
         if (rayHit.collider == null)
         {
             Turn();
