@@ -114,6 +114,8 @@ public class PlayerMove : MonoBehaviour
 
     void OnAttack(Transform enemy)
     {
+        rigid.AddForce(Vector2.up * 7, ForceMode2D.Impulse);
+
         EnemyMove enemyMove = enemy.GetComponent<EnemyMove>();
         enemyMove.OnDamaged();
     }
