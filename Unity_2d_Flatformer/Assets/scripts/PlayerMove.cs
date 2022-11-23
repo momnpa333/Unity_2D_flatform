@@ -85,7 +85,11 @@ public class PlayerMove : MonoBehaviour
         }
         if (collision.gameObject.tag=="enemy")
         {
-            OnDamaged(collision.transform.position); 
+            //attack
+            if (rigid.velocity.y < 0 && transform.position.y > collision.transform.position.y)
+                OnAttack(collision.transform);
+            else
+                OnDamaged(collision.transform.position);
         }
     }
     void OnDamaged(Vector2 targetPos)
@@ -106,5 +110,11 @@ public class PlayerMove : MonoBehaviour
     {
         gameObject.layer = 10;
         spriteRenderer.color = new Color(1, 1, 1, 1);
+    }
+
+    void OnAttack(Transform enemy)
+    {
+        EnemyMove enemyMove = enemy.GetComponent<EnemyMove>();
+        enemyMove.OnDamaged();
     }
 }

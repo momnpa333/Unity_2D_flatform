@@ -9,6 +9,7 @@ public class EnemyMove : MonoBehaviour
     public int nextMove;
     Animator anim;
     SpriteRenderer spriteRenderer;
+    BoxCollider2D Collider;
     // Start is called before the first frame update
     void Awake()
     {
@@ -17,6 +18,7 @@ public class EnemyMove : MonoBehaviour
         Invoke("Think", 3);
         anim = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
+        Collider=GetComponent<BoxCollider2D>();
     }
 
     // Update is called once per frame
@@ -54,5 +56,18 @@ public class EnemyMove : MonoBehaviour
         spriteRenderer.flipX = nextMove == 1;
         CancelInvoke();
         Invoke("Think", 2);
+    }
+    public void OnDamaged()
+    {
+        spriteRenderer.color = new Color(1, 1, 1, 0.4f);
+        spriteRenderer.flipY = true;
+        Collider.enabled = false;
+        rigid.AddForce(Vector2.up * 10, ForceMode2D.Impulse);
+        Invoke("DeActive", 3);
+
+    }
+    void DeActive()
+    {
+        gameObject.SetActive(false);
     }
 }
