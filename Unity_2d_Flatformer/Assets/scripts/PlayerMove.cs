@@ -5,7 +5,8 @@ using UnityEngine.SceneManagement;
 
 
 public class PlayerMove : MonoBehaviour
-{                 
+{
+    public GameManager gameManager;
     public float maxSpeed;
     public float jumpPower;
     Rigidbody2D rigid;
@@ -115,8 +116,29 @@ public class PlayerMove : MonoBehaviour
     void OnAttack(Transform enemy)
     {
         rigid.AddForce(Vector2.up * 7, ForceMode2D.Impulse);
-
+        gameManager.stagePoint += 100;
         EnemyMove enemyMove = enemy.GetComponent<EnemyMove>();
         enemyMove.OnDamaged();
+    }
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if(collision.gameObject.tag=="Coin")
+        {
+            bool isBronze = collision.gameObject.name.Contains("Bronze");
+            bool isSilver = collision.gameObject.name.Contains("Silver");
+            bool isGold = collision.gameObject.name.Contains("Gold");
+
+            if (isBronze)
+                gameManager.stagePoint += 50;
+            else if (isSilver)
+                gameManager.stagePoint += 100;
+            else if (isGold)
+                gameManager.stagePoint += 200;
+
+
+
+            gameManager.stagePoint += 100;
+            collision.gameObject.SetActive(false);
+        }
     }
 }
