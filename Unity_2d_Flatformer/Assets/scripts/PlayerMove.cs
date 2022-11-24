@@ -13,6 +13,7 @@ public class PlayerMove : MonoBehaviour
     SpriteRenderer spriteRenderer;
     BoxCollider2D boxCollider;
     Animator anim;
+    AudioSource audioSource;
 
     public AudioClip audioJump;
     public AudioClip audioAttack;
@@ -29,10 +30,35 @@ public class PlayerMove : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
         anim = GetComponent<Animator>();
         boxCollider = GetComponent<BoxCollider2D>();
+        audioSource = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
-
+    void PlaySound(string action)
+    {
+        switch(action)
+        {
+            case "JUMP":
+                audioSource.clip = audioJump;
+                break;
+            case "ATTACK":
+                audioSource.clip = audioAttack;
+                break;
+            case "DAMAGED":
+                audioSource.clip = audioDamaged;
+                break;
+            case "ITEM":
+                audioSource.clip = audioItem;
+                break;
+            case "DIE":
+                audioSource.clip = audioDie;
+                break;
+            case "FINISH":
+                audioSource.clip = audioFinish;
+                break;
+        }
+        audioSource.Play();
+    }
     private void Update()
     {
         //Jump
@@ -40,6 +66,8 @@ public class PlayerMove : MonoBehaviour
         {
             rigid.AddForce(Vector2.up * jumpPower, ForceMode2D.Impulse);
             anim.SetBool("isJumping", true);
+            PlaySound("JUMP");
+          
         }
 
         if (Input.GetButtonUp("Horizontal"))
@@ -93,6 +121,7 @@ public class PlayerMove : MonoBehaviour
             Debug.Log("?");
             // SceneManager.LoadScene("finish");
             gameManager.Nextstage();
+            PlaySound("FINISH");
         }
         if (collision.gameObject.tag=="enemy")
         {
@@ -111,6 +140,7 @@ public class PlayerMove : MonoBehaviour
     }
     void OnDamaged(Vector2 targetPos)
     {
+        PlaySound("DAMAGED");
         gameManager.HealthDown();
         
         gameObject.layer = 11;
@@ -137,6 +167,7 @@ public class PlayerMove : MonoBehaviour
         gameManager.stagePoint += 100;
         EnemyMove enemyMove = enemy.GetComponent<EnemyMove>();
         enemyMove.OnDamaged();
+        PlaySound("ATTACK");
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -157,6 +188,7 @@ public class PlayerMove : MonoBehaviour
 
             gameManager.stagePoint += 100;
             collision.gameObject.SetActive(false);
+            PlaySound("ITEM");
         }
     }
     public void Ondie()
@@ -165,6 +197,7 @@ public class PlayerMove : MonoBehaviour
         spriteRenderer.flipY = true;
         boxCollider.enabled = false;
         rigid.AddForce(Vector2.up * 10, ForceMode2D.Impulse);
+        PlaySound("DIE");
     }
     public void VelocityZero()
     {
