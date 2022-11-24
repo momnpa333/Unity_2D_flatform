@@ -11,7 +11,15 @@ public class PlayerMove : MonoBehaviour
     public float jumpPower;
     Rigidbody2D rigid;
     SpriteRenderer spriteRenderer;
+    BoxCollider2D boxCollider;
     Animator anim;
+
+    public AudioClip audioJump;
+    public AudioClip audioAttack;
+    public AudioClip audioDamaged;
+    public AudioClip audioItem;
+    public AudioClip audioDie;
+    public AudioClip audioFinish;
 
 
     // Start is called before the first frame update
@@ -20,6 +28,7 @@ public class PlayerMove : MonoBehaviour
         rigid = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         anim = GetComponent<Animator>();
+        boxCollider = GetComponent<BoxCollider2D>();
     }
 
     // Update is called once per frame
@@ -82,7 +91,8 @@ public class PlayerMove : MonoBehaviour
         if(collision.gameObject.CompareTag("Finish"))
         {
             Debug.Log("?");
-            SceneManager.LoadScene("finish");
+            // SceneManager.LoadScene("finish");
+            gameManager.Nextstage();
         }
         if (collision.gameObject.tag=="enemy")
         {
@@ -92,9 +102,17 @@ public class PlayerMove : MonoBehaviour
             else
                 OnDamaged(collision.transform.position);
         }
+        if (collision.gameObject.tag == "Spike")
+        {
+            //attack
+           
+             OnDamaged(collision.transform.position);
+        }
     }
     void OnDamaged(Vector2 targetPos)
     {
+        gameManager.HealthDown();
+        
         gameObject.layer = 11;
 
         spriteRenderer.color = new Color(1, 1, 1,0.4f);
@@ -140,5 +158,16 @@ public class PlayerMove : MonoBehaviour
             gameManager.stagePoint += 100;
             collision.gameObject.SetActive(false);
         }
+    }
+    public void Ondie()
+    {
+        spriteRenderer.color = new Color(1, 1, 1, 0.4f);
+        spriteRenderer.flipY = true;
+        boxCollider.enabled = false;
+        rigid.AddForce(Vector2.up * 10, ForceMode2D.Impulse);
+    }
+    public void VelocityZero()
+    {
+        rigid.velocity = Vector2.zero;
     }
 }
